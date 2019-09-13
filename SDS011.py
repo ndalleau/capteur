@@ -42,8 +42,8 @@ class SDS011:
         PM10list = list()
         while i<=sample:
             res = self.acquisition()
-            if res['PM2.5'] !='': PM25list.append(res['PM2.5'])
-            if res['PM10'] !='': PM10list.append(res['PM10'])
+            if res["PM2.5"] !='': PM25list.append(res['PM2.5'])
+            if res["PM10"] !='': PM10list.append(res['PM10'])
             i+=1
         PM25res = np.array(PM25list)
         PM25mean = PM25res.mean()  #Moyenne PM25
