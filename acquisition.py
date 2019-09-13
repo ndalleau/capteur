@@ -15,6 +15,15 @@ parser.read(args.config)
 ######################################################################################
 
 
+# Lecture des variables issues du fichier de config ##################################
+portCom = '/dev/'+ parser['CAPTEUR']['port']
+sensor = parser['CAPTEUR']['sensor']
+
+moyenne = parser['MESURE']['moyenne'] #duree moyennage en secondes dans le fichier de configuration
+site = parser['MESURE']['site'] #site de mesure dans le fichier de configuration
+
+######################################################################################
+
 #Variables #########################
 DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
 moyenne = 10
