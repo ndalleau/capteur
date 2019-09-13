@@ -24,13 +24,15 @@ site = parser['MESURE']['site'] #site de mesure dans le fichier de configuration
 
 ######################################################################################
 
-#Variables #########################
-DEFAULT_SERIAL_PORT = "/dev/ttyUSB0"
-moyenne = 10
 
 
-import SDS011
-capteur = SDS011.SDS011(port = DEFAULT_SERIAL_PORT)
+if sensor == 'sds011':
+    import SDS011
+    capteur = SDS011.SDS011(port = portCom)
+    
+elif sensor == 'honeywell':
+    import honeywell
+    capteur = honeywell.Honeywell(port = portCom)
 
 while True:
     res  = capteur.moyenne(moyenne)
