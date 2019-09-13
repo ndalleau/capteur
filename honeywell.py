@@ -1,9 +1,10 @@
 import serial
 from datetime import datetime
 import time
+import numpy as np
 
 # Variables #################
-DEFAULT_SERIAL_PORT = "/dev/ttyUSB1" # Serial port to use if no other specified ttyS0 si SDS011 branche sur uart du raspberry
+DEFAULT_SERIAL_PORT = "/dev/ttyUSB0" # Serial port to use if no other specified ttyS0 si SDS011 branche sur uart du raspberry
 sample = 10 #Variable de moyennage en secondes
 
 
@@ -53,18 +54,23 @@ class Honeywell:
         
     def moyenne(self,sample):
         i=0
-        PM25,PM10=0,0
-        while i <= sample:
+        PM25list = list()
+        PM10list = list()
+        while i<=sample:
             res = self.acquisition()
-            PM25 = res["PM2.5"] + PM25
-            PM10 = res["PM10"] + PM10
-            #print (i,pm_25,pm_10)
+            if res['PM2.5'] !='': PM25list.append(res['PM2.5'])
+            if res['PM10'] !='': PM10list.append(res['PM10'])
             i+=1
+        PM25res = np.array(PM25list)
+        PM25mean = PM25res.mean()  #Moyenne PM25
+        PM10res = np.array(PM10list)
+        PM10mean = PM10res.mean()  #Moyenne PM10
         print('\n')
-        #print(datetime.now().strftime("%d %b %Y %H:%M:%S"))
-        print(datetime.now().strftime("%d %b %Y %H:%M:%S"),"Moyenne : PM2.5 {} , PM10 {}".format(round(PM25/i,1),round(PM10/i,1)))
         print("----")
-        return {"PM2.5":PM25/i,"PM10":PM10/i}
+        print("{}: Moyenne : PM2.5 {} , PM10 {}".format(datetime.now().strftime("%d %b %Y %H:%M:%S"),round(PM25mean,3),round(PM10mean,3)))
+        print("----")
+        print('\n')
+        return {"PM2.5":round(PM25mean,2),"PM10":round(PM10mean,2)}
             
             
         
