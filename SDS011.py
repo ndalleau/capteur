@@ -59,7 +59,7 @@ class SDS011:
 #Corps du programme
 test = SDS011()
 while True:
-    res = test.moyenne2(sample)
+    res = test.moyenne(sample)
 """
 
     
