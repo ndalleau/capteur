@@ -3,10 +3,11 @@ from datetime import datetime
 import time
 import numpy as np
 
+"""
 # Variables #################
-DEFAULT_SERIAL_PORT = "/dev/ttyUSB0" # Serial port to use if no other specified ttyS0 si SDS011 branche sur uart du raspberry
+DEFAULT_SERIAL_PORT = "/dev/ttyUSB1" # Serial port to use if no other specified ttyS0 si SDS011 branche sur uart du raspberry
 sample = 10 #Variable de moyennage en secondes
-
+"""
 
 # Constantes ###############
 DEFAULT_BAUD_RATE = 9600 # Serial baud rate to use if no other specified
@@ -22,7 +23,7 @@ MSG_CHAR_2 = b'\x4d' # Second character to be recieved in a valid packet
 class Honeywell:
     "Objet capteur Honeywell HPMA"
     def __init__(self,
-                 port = DEFAULT_SERIAL_PORT,
+                 port = "/dev/ttyUSB0",
                  baud=DEFAULT_BAUD_RATE,
                  serial_timeout = DEFAULT_SERIAL_TIMEOUT,
                  read_timeout = DEFAULT_READ_TIMEOUT):
@@ -50,7 +51,16 @@ class Honeywell:
             line = "PM 2.5: {} μg/m^3  PM 10: {} μg/m^3".format(PM25, PM10)
             # ignoring the checksum and message tail
             print(datetime.now().strftime("%d %b %Y %H:%M:%S.%f: ")+line)
-            return {"PM2.5":PM25,"PM10":PM10}
+            return {
+                "tags":{
+                    "sensor": "SDS011"},
+                "fields":{
+                    "PM2.5":PM25,
+                    "PM10":PM10}
+                    }
+        else:
+            print("Pas de données valides")
+            return {"PM2.5":'',"PM10":''}
         
     def moyenne(self,sample):
         i=0
@@ -58,8 +68,8 @@ class Honeywell:
         PM10list = list()
         while i<=sample:
             res = self.acquisition()
-            if res['PM2.5'] !='': PM25list.append(res['PM2.5'])
-            if res['PM10'] !='': PM10list.append(res['PM10'])
+            if res["fields"]["PM2.5"] !='': PM25list.append(res["fields"]["PM2.5"])
+            if res["fields"]["PM10"] !='': PM10list.append(res["fields"]["PM10"])
             i+=1
         PM25res = np.array(PM25list)
         PM25mean = PM25res.mean()  #Moyenne PM25
@@ -70,13 +80,21 @@ class Honeywell:
         print("{}: Moyenne : PM2.5 {} , PM10 {}".format(datetime.now().strftime("%d %b %Y %H:%M:%S"),round(PM25mean,3),round(PM10mean,3)))
         print("----")
         print('\n')
-        return {"PM2.5":round(PM25mean,2),"PM10":round(PM10mean,2)}
+        return {
+                "tags":{
+                    "sensor": "SDS011"},
+                "fields":{
+                    "PM2.5":round(PM25mean,2),
+                    "PM10":round(PM10mean,2)}
+                    }
             
             
         
-
+"""
 #Corps du programme
 test = Honeywell()
 while True:
     res = test.moyenne(sample)
     print(res)
+    
+"""

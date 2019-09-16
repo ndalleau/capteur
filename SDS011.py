@@ -30,7 +30,13 @@ class SDS011:
             line = "PM 2.5: {} μg/m^3  PM 10: {} μg/m^3".format(PM25, PM10)
             # ignoring the checksum and message tail
             print(datetime.now().strftime("%d %b %Y %H:%M:%S: ")+line)
-            return {"PM2.5":PM25,"PM10":PM10}
+            return {
+                "tags":{
+                    "sensor": "SDS011"},
+                "fields":{
+                    "PM2.5":PM25,
+                    "PM10":PM10}
+                    }
         else:
             print("Pas de données valides")
             return {"PM2.5":'',"PM10":''}
@@ -42,8 +48,8 @@ class SDS011:
         PM10list = list()
         while i<=sample:
             res = self.acquisition()
-            if res["PM2.5"] !='': PM25list.append(res['PM2.5'])
-            if res["PM10"] !='': PM10list.append(res['PM10'])
+            if res["fields"]["PM2.5"] !='': PM25list.append(res["fields"]["PM2.5"])
+            if res["fields"]["PM10"] !='': PM10list.append(res["fields"]["PM10"])
             i+=1
         PM25res = np.array(PM25list)
         PM25mean = PM25res.mean()  #Moyenne PM25
@@ -54,7 +60,15 @@ class SDS011:
         print("{}: Moyenne : PM2.5 {} , PM10 {}".format(datetime.now().strftime("%d %b %Y %H:%M:%S"),round(PM25mean,3),round(PM10mean,3)))
         print("----")
         print('\n')
-        return {"PM2.5":round(PM25mean,2),"PM10":round(PM10mean,2)}
+        return {
+                "tags":{
+                    "sensor": "SDS011"},
+                "fields":{
+                    "PM2.5":round(PM25mean,2),
+                    "PM10":round(PM10mean,2)}
+                    }
+
+
 """
 #Corps du programme
 test = SDS011()
