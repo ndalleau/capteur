@@ -39,7 +39,8 @@ class SDS011:
                     }
         else:
             print("Pas de données valides")
-            return {"PM2.5":'',"PM10":''}
+            return {"fields":{"PM2.5":'',
+                              "PM10":''}}
             
     
     def moyenne(self,sample):
