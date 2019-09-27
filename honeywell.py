@@ -53,14 +53,15 @@ class Honeywell:
             print(datetime.now().strftime("%d %b %Y %H:%M:%S.%f: ")+line)
             return {
                 "tags":{
-                    "sensor": "SDS011"},
+                    "sensor": "honeywell"},
                 "fields":{
                     "PM2.5":PM25,
                     "PM10":PM10}
                     }
         else:
             print("Pas de données valides")
-            return {"PM2.5":'',"PM10":''}
+            return {"fields":{"PM2.5":'',
+                              "PM10":''}}
         
     def moyenne(self,sample):
         i=0
@@ -68,6 +69,7 @@ class Honeywell:
         PM10list = list()
         while i<=sample:
             res = self.acquisition()
+            print(res)
             if res["fields"]["PM2.5"] !='': PM25list.append(res["fields"]["PM2.5"])
             if res["fields"]["PM10"] !='': PM10list.append(res["fields"]["PM10"])
             i+=1
@@ -82,7 +84,7 @@ class Honeywell:
         print('\n')
         return {
                 "tags":{
-                    "sensor": "SDS011"},
+                    "sensor": "honeywell"},
                 "fields":{
                     "PM2.5":round(PM25mean,2),
                     "PM10":round(PM10mean,2)}
