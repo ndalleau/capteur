@@ -11,4 +11,7 @@ Les capteurs sont branchés sur les ports USB en utilisant un module FTDI
 
 # Exécution du script
 
-python acquisition.py -config.ini
+python acquisition.py -c config.ini
+
+config.ini définit les différents paramètres:
+* Port sur lequel est branché le capteur 
