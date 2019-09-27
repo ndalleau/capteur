@@ -14,6 +14,6 @@ Les capteurs sont branchés sur les ports USB en utilisant un module FTDI
 Pour éxécuter le script: 
 python acquisition.py -c config.ini
 
-config.ini définit les différents paramètres:
+config.ini est un fichier de configuration qui définit les différents paramètres nécessaires au bon fonctionnement du script:
 * Port sur lequel est branché le capteur: exemple ttyUSB0
 * Sensor définit le modèle de sensor qui est branché
