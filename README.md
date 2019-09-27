@@ -7,3 +7,8 @@ Envoi des résultats vers le site Luftdaten
 
 # Branchement des capteurs PM
 Les capteurs sont branchés sur les ports USB en utilisant un module FTDI
+
+
+# Exécution du script
+
+python acquisition.py -config.ini
