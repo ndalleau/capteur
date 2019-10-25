@@ -69,6 +69,8 @@ print("Export des données vers InfluxDB {0}".format(parser['INFLUXDB']['export'
 print('Ecriture dans la base InfluxDB, server:{0}, database: {1}'.format(parser['INFLUXDB']['serveur'],parser['INFLUXDB']['database']))  
 print('\n')
 
+if parser['LUFTDATEN']['export'] == 1: print("Export des données vers le serveur de luftdaten.info: OK") 
+
 print("Id du raspberry: ",raspId)
 print('\n')
 
@@ -82,6 +84,7 @@ elif sensor == 'honeywell':
 else:
     print("Attention: Capteur inconnu")
 
+# Se repete indefiniment
 while True:
         res  = capteur.moyenne(moyenne)
         res["tags"]["Id_rasp"]= raspId
