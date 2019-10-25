@@ -2,7 +2,7 @@ import configparser  #Module pour gérer l import d un fichier de configuration
 import argparse #Module pour ajouter des paramètres lors de l appel du script 
 from influxdb import InfluxDBClient  #Module pour gérer l export des données vers la base InfluxDB
 import os
-import toLuftdaten
+import toLuftdaten  #Module pour gérer l envoi des données vers le site luftdaten.info
 
 # Parseur ############################################################################
 #Le parseur definit les paramètres à compléter lors du lancement du script
