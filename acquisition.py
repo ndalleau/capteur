@@ -2,6 +2,7 @@ import configparser  #Module pour gérer l import d un fichier de configuration
 import argparse #Module pour ajouter des paramètres lors de l appel du script 
 from influxdb import InfluxDBClient  #Module pour gérer l export des données vers la base InfluxDB
 import os
+import sys
 import toLuftdaten  #Module pour gérer l envoi des données vers le site luftdaten.info
 
 # Parseur ############################################################################
@@ -32,7 +33,7 @@ measurement = parser['INFLUXDB']['measurement']
 
 # Gestion csv ########################################################################
 ficData = parser['EXPORT_CSV']['file_name']
-csv = int(parser['EXPORT_CSV']['export']) #Mettre True pour permettre ecriture des données dans un fichier csv
+csv = int(parser['EXPORT_CSV']['export']) #Mettre 1 dans fichier de config pour permettre ecriture des données dans un fichier csv
 #######################################################################################
 
 # Gestion InfluxDB ####################################################################
@@ -62,17 +63,34 @@ print('\n')
 print('Lecture fichier de configuration: ',args.config)
 print('\n')
 
-print("{0} sur port {1}".format(sensor, parser['CAPTEUR']['port']))
+#Verification de la presence d un capteur sur port:
+if parser['CAPTEUR']['port'] not in os.listdir('/dev'):
+    print("Attention pas de capteur detecté sur {0}".format(parser['CAPTEUR']['port']))
+    sys.exit()
+else:
+    print("Capteur {0} sur port {1}".format(sensor, parser['CAPTEUR']['port']))
+    
 print("site de mesure: {0}".format(site))
+print("Latitude: {0}, Longitude: {1}".format(parser['MESURE']['latitude'],parser['MESURE']['longitude']))
+print("Moyenne en secondes: {0}".format(parser['MESURE']['moyenne']))
+print('---')
+print('\n')
 
+#Export des données vers la base InfluxDB
 print("Export des données vers InfluxDB {0}".format(parser['INFLUXDB']['export']))
 print('Ecriture dans la base InfluxDB, server:{0}, database: {1}'.format(parser['INFLUXDB']['serveur'],parser['INFLUXDB']['database']))  
 print('\n')
 
-if parser['LUFTDATEN']['export'] == 1: print("Export des données vers le serveur de luftdaten.info: OK") 
+#Export des données vers le site luftdaten.info
+if int(parser['LUFTDATEN']['export']) == 1:
+    print("Export des données vers le serveur de luftdaten.info: OK")
+else:
+    print("Pas d export des données vers le site luftdaten.info") 
+print('\n')
 
 print("Id du raspberry: ",raspId)
 print('\n')
+print('---')
 
 if sensor == 'SDS011':
     import SDS011
@@ -85,6 +103,7 @@ else:
     print("Attention: Capteur inconnu")
 
 # Se repete indefiniment
+print("Debut des mesures: ")
 while True:
         res  = capteur.moyenne(moyenne)
         res["tags"]["Id_rasp"]= raspId
@@ -94,6 +113,8 @@ while True:
         print([res])
         #Insertion de res dans la base InfluxDB
         if infl == 1: clientInflux.write_points([res])
+        #Envoi des résultats vers site luftdaten.info
+        if parser['LUFTDATEN']['export'] == 1: toLuftdaten(res)
     
     
 
