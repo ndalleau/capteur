@@ -22,7 +22,7 @@ parser.read(args.config)
 #Variables issues du fichier de configuration.ini
 DEFAULT_SERIAL_PORT = '/dev/'+ parser['CAPTEUR']['port']  #Port sur lequel est branche le sensor
 sensor = parser['CAPTEUR']['sensor']
-print(sensor)
+print('Capteur: ',sensor)
 
 site = parser['MESURE']['site']
 moyenne = int(parser['MESURE']['moyenne'])
