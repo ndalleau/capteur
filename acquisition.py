@@ -99,6 +99,9 @@ if sensor == 'SDS011':
 elif sensor == 'honeywell':
     import honeywell
     capteur = honeywell.Honeywell(port = DEFAULT_SERIAL_PORT) #Creation de l objet Honeywell sur port
+elif sensor == 'sps30':
+    import sps30
+    capteur = sps30.SPS30(port = DEFAULT_SERIAL_PORT) #Cration de l objet sensirion SPS30 sur port
 else:
     print("Attention: Capteur inconnu")
 
